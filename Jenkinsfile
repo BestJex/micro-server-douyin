@@ -8,12 +8,12 @@ pipeline {
     }
     stage('Build Image') {
       steps {
-        sh 'docker build -t registry-vpc.cn-beijing.aliyuncs.com/micro-java/$PROJECT .'
+        sh 'docker build -t registry.cn-beijing.aliyuncs.com/micro-java/$PROJECT .'
       }
     }
     stage('Push Image') {
       steps {
-        sh 'docker push registry-vpc.cn-beijing.aliyuncs.com/micro-java/$PROJECT'
+        sh 'docker push registry.cn-beijing.aliyuncs.com/micro-java/$PROJECT'
       }
     }
     stage('Deploy') {
