@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,24 +32,51 @@ public class DouyinService {
 
     private final static String USER_SHARE_API = "https://www.iesdouyin.com/share/user/%s?share_type=link";
 
+    private final static String RECOMMEND_VIDEO_API = "https://aweme-eagle-hl.snssdk.com/aweme/v1/feed/?version_code=7.7.0&pass-region=1&pass-route=1&js_sdk_version=1.17.4.3&app_name=aweme&vid=C266ADED-A5C8-463E-9C5A-DA376B0FA802&app_version=7.7.0&device_id=67068710449&channel=App%20Store&mcc_mnc=46011&aid=1128&screen_width=828&openudid=c8412ad758b51f17b5ab859866ee24809789ab24&os_api=18&ac=WIFI&os_version=12.4&device_platform=iphone&build_number=77019&device_type=iPhone11,8&iid=83511626666&idfa=6FDD82E0-8687-4C6F-BB99-A7748637C048&volume=-0.06&count=6&longitude=121.482183606674&feed_style=0&filter_warn=0&cached_item_num=1&address_book_access=0&last_ad_show_interval=18&user_id=95044648655&type=0&gps_access=3&latitude=31.24161681429322&pull_type=2&max_cursor=0";
+
+    private final static String TT_TOKEN = "000691de6bdedb03f4630c6e9752ae210339f3075692e4eabe75ae25b5107a4fa133395e42466336f61166a6d0b57e642515";
+
+    private final static String GORGON = "8300e71d000094d0396dcadee0624bc8d6d517436119a24aa886";
+
     private final RpcNodeDyService rpcNodeDyService;
 
     /**
-     * 确保接口返回结果
+     * 系统推荐列表
+     */
+    public DyAweme videoList() {
+        try {
+            Document document = Jsoup.connect(RECOMMEND_VIDEO_API)
+                    .header("X-Khronos", String.valueOf(new Date().getTime() / 1000))
+                    .header("x-Tt-Token", TT_TOKEN)
+                    .header("X-Gorgon", GORGON)
+                    .ignoreContentType(true)
+                    .get();
+            log.info(document.title());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 用户视频列表
      */
     public DyAweme videoList(String dyId, String dytk, String cursor) {
-        DyAweme videos = getVideoList(dyId, dytk, cursor);
-        while (videos.getHas_more() == 1 && CollectionUtils.isEmpty(videos.getAweme_list())){
-            videos = getVideoList(dyId, dytk, cursor);
-        }
-        return videos;
+        return getVideoList(dyId, dytk, cursor);
     }
 
     /**
      * 获取抖音用户视频列表
      */
     private DyAweme getVideoList(String dyId, String dytk, String cursor){
-        String signature = rpcNodeDyService.generateSignature(dyId);
+        String script = null;
+        try {
+            Document document = Jsoup.connect("https://www.iesdouyin.com/share/user/" + dyId).get();
+            script = document.select("script").get(1).html();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String signature = rpcNodeDyService.generateSignature(dyId, script);
         String api = String.format(VIDEO_LIST_API, dyId, cursor, signature, dytk);
         try {
             Document document = httpGet(api);

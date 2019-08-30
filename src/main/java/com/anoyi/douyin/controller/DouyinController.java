@@ -27,4 +27,9 @@ public class DouyinController {
         return douyinService.videoList(id, tk, cursor);
     }
 
+    @GetMapping("/video")
+    public DyAweme video() {
+        return douyinService.videoList();
+    }
+
 }

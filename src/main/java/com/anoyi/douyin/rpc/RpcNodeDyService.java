@@ -12,8 +12,9 @@ public interface RpcNodeDyService {
     /**
      * 获取签名
      * @param id 用户ID
+     * @param script 脚本
      * @return 签名
      */
-    String generateSignature(String id);
+    String generateSignature(String id, String script);
 
 }
