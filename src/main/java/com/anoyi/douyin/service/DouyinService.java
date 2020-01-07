@@ -82,9 +82,14 @@ public class DouyinService {
         try {
             Document document = httpGet(api);
             DyAweme aweme = JSON.parseObject(document.text(), DyAweme.class);
-            aweme.getAweme_list().forEach(item -> Arrays.stream(item.getVideo().getPlay_addr().getUrl_list()).forEach(
-                    videoUrl -> videoUrl = videoUrl.replace("https://aweme.snssdk.com/aweme/v1/play/", "https://aweme.snssdk.com/aweme/v1/playwm/")
-            ));
+            aweme.getAweme_list().forEach(item -> {
+                String[] urlList = item.getVideo().getPlay_addr().getUrl_list();
+                for (int i = 0; i < urlList.length; i++) {
+                    urlList[i] = urlList[i].replace("https://aweme.snssdk.com/aweme/v1/play/", "https://aweme.snssdk.com/aweme/v1/playwm/");
+                }
+                item.getVideo().getPlay_addr().setUrl_list(urlList);
+            });
+            return aweme;
         } catch (IOException e) {
             e.printStackTrace();
         }
