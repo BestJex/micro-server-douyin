@@ -28,7 +28,7 @@ public class DouyinService {
 
     private final static String XMLHttpRequest = "XMLHttpRequest";
 
-    private final static String VIDEO_LIST_API = "https://www.iesdouyin.com/aweme/v1/aweme/post/?user_id=%s&count=21&max_cursor=%s&aid=1128&_signature=%s&dytk=%s";
+    private final static String VIDEO_LIST_API = "https://www.iesdouyin.com/web/api/v2/aweme/post/?user_id=%s&count=21&max_cursor=%s&aid=1128&_signature=%s&dytk=%s";
 
     private final static String USER_SHARE_API = "https://www.iesdouyin.com/share/user/%s?share_type=link";
 
