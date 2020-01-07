@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,7 +81,10 @@ public class DouyinService {
         String api = String.format(VIDEO_LIST_API, dyId, cursor, signature, dytk);
         try {
             Document document = httpGet(api);
-            return JSON.parseObject(document.text(), DyAweme.class);
+            DyAweme aweme = JSON.parseObject(document.text(), DyAweme.class);
+            aweme.getAweme_list().forEach(item -> Arrays.stream(item.getVideo().getPlay_addr().getUrl_list()).forEach(
+                    videoUrl -> videoUrl = videoUrl.replace("https://aweme.snssdk.com/aweme/v1/play/", "https://aweme.snssdk.com/aweme/v1/playwm/")
+            ));
         } catch (IOException e) {
             e.printStackTrace();
         }

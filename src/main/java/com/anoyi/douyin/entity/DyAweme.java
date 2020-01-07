@@ -18,7 +18,7 @@ public class DyAweme {
     private long status_code;
 
     @Data
-    private class Aweme{
+    public class Aweme{
         private String aweme_id;
         private String desc;
         private int aweme_type;
@@ -27,26 +27,26 @@ public class DyAweme {
         private List<TextExtra> text_extra;
         private Video video;
         @Data
-        private class Statistics{
+        public class Statistics{
             private String digg_count;
             private int forward_count;
         }
         @Data
-        private class TextExtra{
+        public class TextExtra{
             private int end;
             private String hashtag_name;
             private int start;
             private int type;
         }
         @Data
-        private class Video{
+        public class Video{
             private UrlJSON cover;
             private UrlJSON dynamic_cover;
             private int height;
             private UrlJSON play_addr;
             private int width;
             @Data
-            private class UrlJSON{
+            public class UrlJSON{
                 private String uri;
                 private String[] url_list;
             }
