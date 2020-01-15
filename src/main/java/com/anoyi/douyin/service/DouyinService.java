@@ -128,6 +128,10 @@ public class DouyinService {
             dyUser.getFollowInfo().put("follower", follower);
             String likeNum = document.select("span.liked-num.block span.num").text();
             dyUser.getFollowInfo().put("likeNum", likeNum);
+            String posts = document.select("div[data-type=post] span.num").text();
+            dyUser.setPosts(posts);
+            String likes = document.select("div[data-type=like] span.num").text();
+            dyUser.setLikes(likes);
             DyAweme videos = videoList(dyId, tk, "0");
             dyUser.setVideos(videos);
             return dyUser;

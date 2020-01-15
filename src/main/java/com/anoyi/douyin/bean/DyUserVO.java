@@ -23,6 +23,10 @@ public class DyUserVO {
 
     private String verifyInfo;
 
+    private String posts;
+
+    private String likes;
+
     private Map<String, String> extraInfo = new HashMap<>();
 
     private Map<String, String> followInfo = new HashMap<>();
