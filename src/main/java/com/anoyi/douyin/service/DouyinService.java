@@ -71,7 +71,6 @@ public class DouyinService {
         String script = null;
         try {
             Document document = Jsoup.connect("https://www.iesdouyin.com/share/user/" + dyId).get();
-            log.info(document.html());
             script = document.select("script").get(1).html();
         } catch (IOException e) {
             e.printStackTrace();
