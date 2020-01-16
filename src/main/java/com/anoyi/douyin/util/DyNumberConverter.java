@@ -18,7 +18,7 @@ import java.util.Map;
  * 8	&#xe61d;	&#xe614;	&#xe60b;
  * 9	&#xe609;	&#xe61e;	&#xe615;
  */
-public class DyNumberConvertor {
+public class DyNumberConverter {
 
     private final static Map<String, String> NUMBER_MAP = new HashMap<>(30);
 

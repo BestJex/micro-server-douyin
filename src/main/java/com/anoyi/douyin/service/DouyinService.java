@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anoyi.douyin.bean.DyUserVO;
 import com.anoyi.douyin.entity.DyAweme;
 import com.anoyi.douyin.rpc.RpcNodeDyService;
-import com.anoyi.douyin.util.DyNumberConvertor;
+import com.anoyi.douyin.util.DyNumberConverter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
@@ -12,10 +12,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,6 +71,7 @@ public class DouyinService {
         String script = null;
         try {
             Document document = Jsoup.connect("https://www.iesdouyin.com/share/user/" + dyId).get();
+            log.info(document.html());
             script = document.select("script").get(1).html();
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,7 +171,7 @@ public class DouyinService {
         Elements elements = document.select("i.icon.iconfont");
         elements.forEach(element -> {
             String text = element.text();
-            String number = DyNumberConvertor.getNumber(text);
+            String number = DyNumberConverter.getNumber(text);
             element.text(number);
         });
     }
