@@ -27,7 +27,9 @@ public class DouyinService {
 
     private final static String XMLHttpRequest = "XMLHttpRequest";
 
-    private final static String VIDEO_LIST_API = "https://www.iesdouyin.com/web/api/v2/aweme/post/?user_id=%s&count=21&max_cursor=%s&aid=1128&_signature=%s&dytk=%s";
+    private final static String POST_VIDEOS_API = "https://www.iesdouyin.com/web/api/v2/aweme/post/?user_id=%s&count=21&max_cursor=%s&aid=1128&_signature=%s&dytk=%s";
+
+    private final static String LIKE_VIDEOS_API = "https://www.iesdouyin.com/web/api/v2/aweme/like/?user_id=%s&count=21&max_cursor=%s&aid=1128&_signature=%s&dytk=%s";
 
     private final static String USER_SHARE_API = "https://www.iesdouyin.com/share/user/%s?share_type=link";
 
@@ -58,25 +60,25 @@ public class DouyinService {
     }
 
     /**
-     * 用户视频列表
+     * 用户发布的视频列表
      */
-    public DyAweme videoList(String dyId, String dytk, String cursor) {
-        return getVideoList(dyId, dytk, cursor);
+    public DyAweme postVideos(String dyId, String dytk, String cursor, String signature) {
+        String api = String.format(POST_VIDEOS_API, dyId, cursor, signature, dytk);
+        return getVideoList(api);
+    }
+
+    /**
+     * 用户喜欢的视频列表
+     */
+    public DyAweme likeVideos(String dyId, String dytk, String cursor, String signature) {
+        String api = String.format(LIKE_VIDEOS_API, dyId, cursor, signature, dytk);
+        return getVideoList(api);
     }
 
     /**
      * 获取抖音用户视频列表
      */
-    private DyAweme getVideoList(String dyId, String dytk, String cursor){
-        String script = null;
-        try {
-            Document document = Jsoup.connect("https://www.iesdouyin.com/share/user/" + dyId).get();
-            script = document.select("script").get(1).html();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String signature = rpcNodeDyService.generateSignature(dyId, script);
-        String api = String.format(VIDEO_LIST_API, dyId, cursor, signature, dytk);
+    private DyAweme getVideoList(String api){
         try {
             Document document = httpGet(api);
             DyAweme aweme = JSON.parseObject(document.text(), DyAweme.class);
@@ -116,10 +118,6 @@ public class DouyinService {
             dyUser.setVerifyInfo(verifyInfo);
             String signature = document.select("p.signature").text();
             dyUser.setSignature(signature);
-            String location = document.select("span.location").text();
-            dyUser.getExtraInfo().put("location", location);
-            String constellation = document.select("span.constellation").text();
-            dyUser.getExtraInfo().put("constellation", constellation);
             String focus = document.select("span.focus.block span.num").text();
             dyUser.getFollowInfo().put("focus", focus);
             String follower = document.select("span.follower.block span.num").text();
@@ -130,8 +128,9 @@ public class DouyinService {
             dyUser.setPosts(posts);
             String likes = document.select("div[data-type=like] span.num").text();
             dyUser.setLikes(likes);
-            DyAweme videos = videoList(dyId, tk, "0");
-            dyUser.setVideos(videos);
+            String script = document.select("script").get(1).html();
+            String sign = rpcNodeDyService.generateSignature(dyId, script);
+            dyUser.setSign(sign);
             return dyUser;
         } catch (IOException e) {
             e.printStackTrace();

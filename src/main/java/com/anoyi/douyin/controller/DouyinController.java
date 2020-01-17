@@ -19,11 +19,20 @@ public class DouyinController {
         return douyinService.getDyUser(id);
     }
 
-    @GetMapping("/videos/{id}/{tk}")
-    public DyAweme videos(@PathVariable("id") String id,
+    @GetMapping("/post/{id}/{tk}")
+    public DyAweme posts(@PathVariable("id") String id,
                           @PathVariable("tk") String tk,
-                          @RequestParam(value = "cursor", defaultValue = "0") String cursor) {
-        return douyinService.videoList(id, tk, cursor);
+                          @RequestParam(value = "cursor", defaultValue = "0") String cursor,
+                          @RequestParam("s") String sign) {
+        return douyinService.postVideos(id, tk, cursor, sign);
+    }
+
+    @GetMapping("/like/{id}/{tk}")
+    public DyAweme likes(@PathVariable("id") String id,
+                          @PathVariable("tk") String tk,
+                          @RequestParam(value = "cursor", defaultValue = "0") String cursor,
+                          @RequestParam("s") String sign) {
+        return douyinService.likeVideos(id, tk, cursor, sign);
     }
 
     @GetMapping("/video")

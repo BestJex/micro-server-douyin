@@ -1,6 +1,5 @@
 package com.anoyi.douyin.bean;
 
-import com.anoyi.douyin.entity.DyAweme;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -27,10 +26,8 @@ public class DyUserVO {
 
     private String likes;
 
-    private Map<String, String> extraInfo = new HashMap<>();
-
     private Map<String, String> followInfo = new HashMap<>();
 
-    private DyAweme videos;
+    private String sign;
 
 }
