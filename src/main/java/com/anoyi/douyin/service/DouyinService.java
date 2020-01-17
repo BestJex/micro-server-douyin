@@ -96,46 +96,51 @@ public class DouyinService {
         throw new RuntimeException("HTTP request error: " + api);
     }
 
+    public DyUserVO getDyUserByHtml(String id, Document document) {
+        DyUserVO dyUser = new DyUserVO();
+        dyUser.setId(id);
+        parseIconFonts(document);
+        String nickname = document.select("p.nickname").text();
+        dyUser.setNickname(nickname);
+        String avatar = document.select("img.avatar").attr("src");
+        dyUser.setAvatar(avatar);
+        String tk = match(document.html(), "dytk: '(.*?)'");
+        dyUser.setTk(tk);
+        String shortId = document.select("p.shortid").text();
+        dyUser.setShortId(shortId);
+        String verifyInfo = document.select("div.verify-info").text();
+        dyUser.setVerifyInfo(verifyInfo);
+        String signature = document.select("p.signature").text();
+        dyUser.setSignature(signature);
+        String focus = document.select("span.focus.block span.num").text();
+        dyUser.getFollowInfo().put("focus", focus);
+        String follower = document.select("span.follower.block span.num").text();
+        dyUser.getFollowInfo().put("follower", follower);
+        String likeNum = document.select("span.liked-num.block span.num").text();
+        dyUser.getFollowInfo().put("likeNum", likeNum);
+        String posts = document.select("div[data-type=post] span.num").text();
+        dyUser.setPosts(posts);
+        String likes = document.select("div[data-type=like] span.num").text();
+        dyUser.setLikes(likes);
+        String script = document.select("script").get(1).html();
+        String sign = rpcNodeDyService.generateSignature(id, script);
+        dyUser.setSign(sign);
+        return dyUser;
+    }
+
+
     /**
      * 获取抖音用户信息
      */
-    public DyUserVO getDyUser(String dyId) {
-        String api = String.format(USER_SHARE_API, dyId);
+    public DyUserVO getDyUser(String id) {
         try {
-            DyUserVO dyUser = new DyUserVO();
-            dyUser.setId(dyId);
+            String api = String.format(USER_SHARE_API, id);
             Document document = httpGet(api);
-            parseIconFonts(document);
-            String nickname = document.select("p.nickname").text();
-            dyUser.setNickname(nickname);
-            String avatar = document.select("img.avatar").attr("src");
-            dyUser.setAvatar(avatar);
-            String tk = match(document.html(), "dytk: '(.*?)'");
-            dyUser.setTk(tk);
-            String shortId = document.select("p.shortid").text();
-            dyUser.setShortId(shortId);
-            String verifyInfo = document.select("div.verify-info").text();
-            dyUser.setVerifyInfo(verifyInfo);
-            String signature = document.select("p.signature").text();
-            dyUser.setSignature(signature);
-            String focus = document.select("span.focus.block span.num").text();
-            dyUser.getFollowInfo().put("focus", focus);
-            String follower = document.select("span.follower.block span.num").text();
-            dyUser.getFollowInfo().put("follower", follower);
-            String likeNum = document.select("span.liked-num.block span.num").text();
-            dyUser.getFollowInfo().put("likeNum", likeNum);
-            String posts = document.select("div[data-type=post] span.num").text();
-            dyUser.setPosts(posts);
-            String likes = document.select("div[data-type=like] span.num").text();
-            dyUser.setLikes(likes);
-            String script = document.select("script").get(1).html();
-            String sign = rpcNodeDyService.generateSignature(dyId, script);
-            dyUser.setSign(sign);
-            return dyUser;
+            return getDyUserByHtml(id, document);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("HTTP request error: " + api);
+        throw new RuntimeException("HTTP request error: " + id);
     }
 
     /**

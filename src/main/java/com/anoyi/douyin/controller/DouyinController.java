@@ -4,6 +4,8 @@ import com.anoyi.douyin.bean.DyUserVO;
 import com.anoyi.douyin.entity.DyAweme;
 import com.anoyi.douyin.service.DouyinService;
 import lombok.AllArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class DouyinController {
 
     private final DouyinService douyinService;
+
+    @PostMapping("/user/{id}")
+    public DyUserVO user(@RequestBody String html, @PathVariable("id") String id){
+        Document document = Jsoup.parse(html);
+        return douyinService.getDyUserByHtml(id, document);
+    }
 
     @GetMapping("/user/{id}")
     public DyUserVO user(@PathVariable("id") String id) {
