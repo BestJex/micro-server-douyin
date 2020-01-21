@@ -35,6 +35,7 @@ public class DyAweme {
         public class TextExtra{
             private int end;
             private String hashtag_name;
+            private String user_id;
             private int start;
             private int type;
         }
