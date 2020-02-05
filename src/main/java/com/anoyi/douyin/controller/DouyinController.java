@@ -48,4 +48,9 @@ public class DouyinController {
         return douyinService.videoList();
     }
 
+    @GetMapping("/media/signature")
+    public String mediaSignature() {
+        return douyinService.mediaSign();
+    }
+
 }

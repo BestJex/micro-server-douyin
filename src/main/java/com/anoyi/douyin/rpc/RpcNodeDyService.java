@@ -17,4 +17,10 @@ public interface RpcNodeDyService {
      */
     String generateSignature(String id, String script);
 
+    /**
+     * 获取 media 签名
+     * @return 签名
+     */
+    String mediaSignature();
+
 }

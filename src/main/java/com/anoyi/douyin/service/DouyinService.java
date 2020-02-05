@@ -42,6 +42,13 @@ public class DouyinService {
     private final RpcNodeDyService rpcNodeDyService;
 
     /**
+     * Media 签名算法
+     */
+    public String mediaSign(){
+        return rpcNodeDyService.mediaSignature();
+    }
+
+    /**
      * 系统推荐列表
      */
     public DyAweme videoList() {
