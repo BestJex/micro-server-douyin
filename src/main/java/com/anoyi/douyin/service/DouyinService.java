@@ -149,7 +149,7 @@ public class DouyinService {
         String likes = document.select("div[data-type=like] span.num").text();
         dyUser.setLikes(likes);
         String script = document.select("script").get(1).html();
-        String sign = rpcNodeDyService.generateSignature(id, script);
+        String sign = rpcNodeDyService.iesSignature(id, script);
         dyUser.setSign(sign);
         return dyUser;
     }

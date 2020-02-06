@@ -15,7 +15,7 @@ public interface RpcNodeDyService {
      * @param script 脚本
      * @return 签名
      */
-    String generateSignature(String id, String script);
+    String iesSignature(String id, String script);
 
     /**
      * 获取 media 签名
