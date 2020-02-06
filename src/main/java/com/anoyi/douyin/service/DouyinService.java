@@ -1,6 +1,7 @@
 package com.anoyi.douyin.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.anoyi.douyin.bean.DyUserVO;
 import com.anoyi.douyin.entity.DyAweme;
 import com.anoyi.douyin.rpc.RpcNodeDyService;
@@ -44,8 +45,26 @@ public class DouyinService {
     /**
      * Media 签名算法
      */
-    public String mediaSign(){
+    public String mediaSign() {
         return rpcNodeDyService.mediaSignature();
+    }
+
+    /**
+     * Media 签名算法
+     */
+    public String enterpriseSign(String cookie, String url) {
+        try {
+            Connection.Response response = Jsoup.connect("https://e.douyin.com/aweme/v1/bluev/user/info")
+                    .header("Cookie", cookie)
+                    .header("User-Agent", UserAgent)
+                    .ignoreContentType(true)
+                    .method(Connection.Method.GET).execute();
+            JSONObject json = JSON.parseObject(response.body());
+            return rpcNodeDyService.enterpriseSignature(json.getString("sec_token"), url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -60,7 +79,7 @@ public class DouyinService {
                     .ignoreContentType(true)
                     .get();
             log.info(document.title());
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -85,7 +104,7 @@ public class DouyinService {
     /**
      * 获取抖音用户视频列表
      */
-    private DyAweme getVideoList(String api){
+    private DyAweme getVideoList(String api) {
         try {
             Document document = httpGet(api);
             DyAweme aweme = JSON.parseObject(document.text(), DyAweme.class);
@@ -166,9 +185,9 @@ public class DouyinService {
     /**
      * 正则匹配
      */
-    private String match(String content, String regx){
+    private String match(String content, String regx) {
         Matcher matcher = Pattern.compile(regx).matcher(content);
-        if (matcher.find()){
+        if (matcher.find()) {
             return matcher.group(1);
         }
         return "";
@@ -177,7 +196,7 @@ public class DouyinService {
     /**
      * 全局 icon 数字解析
      */
-    private void parseIconFonts(Document document){
+    private void parseIconFonts(Document document) {
         Elements elements = document.select("i.icon.iconfont");
         elements.forEach(element -> {
             String text = element.text();

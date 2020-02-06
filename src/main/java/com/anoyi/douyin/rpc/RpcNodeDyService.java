@@ -23,4 +23,11 @@ public interface RpcNodeDyService {
      */
     String mediaSignature();
 
+    /**
+     * 获取签名
+     * @param secToken 脚本
+     * @return 签名
+     */
+    String enterpriseSignature(String secToken, String url);
+
 }

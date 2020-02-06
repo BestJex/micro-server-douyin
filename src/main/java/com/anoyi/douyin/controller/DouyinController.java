@@ -1,5 +1,6 @@
 package com.anoyi.douyin.controller;
 
+import com.anoyi.douyin.bean.DySignatureRequestBean;
 import com.anoyi.douyin.bean.DyUserVO;
 import com.anoyi.douyin.entity.DyAweme;
 import com.anoyi.douyin.service.DouyinService;
@@ -51,6 +52,11 @@ public class DouyinController {
     @GetMapping("/media/signature")
     public String mediaSignature() {
         return douyinService.mediaSign();
+    }
+
+    @PostMapping("/enterprise/signature")
+    public String enterpriseSignature(@RequestBody DySignatureRequestBean signatureRequestBean) {
+        return douyinService.enterpriseSign(signatureRequestBean.getCookie(), signatureRequestBean.getUrl());
     }
 
 }
