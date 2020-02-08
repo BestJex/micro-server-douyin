@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/douyin")
 @AllArgsConstructor
-@CrossOrigin("anoyi.com")
+@CrossOrigin("*")
 public class DouyinController {
 
     private final DouyinService douyinService;
