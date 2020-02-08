@@ -148,12 +148,14 @@ public class DouyinService {
         dyUser.setPosts(posts);
         String likes = document.select("div[data-type=like] span.num").text();
         dyUser.setLikes(likes);
-        Matcher matcher = Pattern.compile("tac='(.*?)'").matcher(document.select("script").html());
-        if (matcher.find()){
-            String tac = matcher.group(1);
-            String sign = rpcNodeDyService.iesSignature(id, tac);
-            dyUser.setSign(sign);
-            return dyUser;
+        Elements scripts = document.select("script");
+        for (int i = 0; i < scripts.size(); i++) {
+            String script = scripts.get(i).html();
+            if (script.startsWith("tac")){
+                String sign = rpcNodeDyService.iesSignature(id, script);
+                dyUser.setSign(sign);
+                return dyUser;
+            }
         }
         throw new RuntimeException("Unknow Exception");
     }
