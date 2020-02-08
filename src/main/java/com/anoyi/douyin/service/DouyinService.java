@@ -148,10 +148,10 @@ public class DouyinService {
         dyUser.setPosts(posts);
         String likes = document.select("div[data-type=like] span.num").text();
         dyUser.setLikes(likes);
-        Matcher matcher = Pattern.compile("tac='.*?'").matcher(document.select("script").html());
+        Matcher matcher = Pattern.compile("tac='(.*?)'").matcher(document.select("script").html());
         if (matcher.find()){
-            String tacScript = matcher.group(0);
-            String sign = rpcNodeDyService.iesSignature(id, tacScript);
+            String tac = matcher.group(1);
+            String sign = rpcNodeDyService.iesSignature(id, tac);
             dyUser.setSign(sign);
             return dyUser;
         }
