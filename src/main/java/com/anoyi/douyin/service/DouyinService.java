@@ -148,12 +148,15 @@ public class DouyinService {
         dyUser.setPosts(posts);
         String likes = document.select("div[data-type=like] span.num").text();
         dyUser.setLikes(likes);
-        String script = document.select("script").get(1).html();
-        String sign = rpcNodeDyService.iesSignature(id, script);
-        dyUser.setSign(sign);
-        return dyUser;
+        Matcher matcher = Pattern.compile("tac='.*?'").matcher(document.select("script").html());
+        if (matcher.find()){
+            String tacScript = matcher.group(0);
+            String sign = rpcNodeDyService.iesSignature(id, tacScript);
+            dyUser.setSign(sign);
+            return dyUser;
+        }
+        throw new RuntimeException("Unknow Exception");
     }
-
 
     /**
      * 获取抖音用户信息
